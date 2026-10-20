@@ -1,0 +1,88 @@
+name: Just Music APK delivery
+
+# The APKs live in Actions artifacts, which are served from Azure blob storage. This job copies the
+# newest successful build into a lightweight git tag (`just-music-apks`) so the binaries can be
+# fetched over plain git, and so there is a stable, browsable place that always holds the last pair.
+on:
+  push:
+    branches: [ arena/f605d077-just-music ]
+    paths:
+      - '.github/workflows/just-music-deliver.yml'
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: "Run whose just-music-apks artifact to publish (empty: latest successful)"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  actions: read
+
+env:
+  GH_TOKEN: ${{ github.token }}
+  GH_REPO: ${{ github.repository }}
+
+jobs:
+  publish:
+    name: Publish APKs as a git tag
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+
+      - name: Find the build run
+        id: find
+        run: |
+          set -euo pipefail
+          run_id="${{ inputs.run_id }}"
+          if [ -z "$run_id" ]; then
+            run_id=$(gh api "repos/$GH_REPO/actions/workflows/just-music-apk.yml/runs?status=success&per_page=1" --jq '.workflow_runs[0].id')
+          fi
+          test -n "$run_id"
+          echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
+          echo "Publishing APKs from run $run_id"
+
+      - name: Download APK artifact
+        run: |
+          set -euo pipefail
+          rm -rf dist
+          gh run download "${{ steps.find.outputs.run_id }}" --name just-music-apks --dir dist
+          ls -l dist
+
+      - name: Publish as the just-music-apks tag
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/apks
+          cp dist/*.apk dist/checksums.txt /tmp/apks/
+          git config user.name "just-music-bot"
+          git config user.email "actions@users.noreply.github.com"
+
+          # An orphan commit keeps the branch history (and its diffs) free of binaries.
+          git checkout --orphan apk-delivery
+          shopt -s dotglob
+          rm -rf -- *
+          mkdir -p apk
+          cp /tmp/apks/* apk/
+          cat > apk/README.md <<EOF
+          # Just Music APKs
+
+          Built from \`${{ github.sha }}\` by [run ${{ steps.find.outputs.run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ steps.find.outputs.run_id }}).
+
+          | File | What it is |
+          |---|---|
+          | \`app-foss-universal-debug.apk\` | debug build, debug-signed, \`io.github.aedev.justmusic.debug\` |
+          | \`app-foss-universal-release.apk\` | R8 release build, signed with the CI build key, \`io.github.aedev.justmusic\` |
+          | \`checksums.txt\` | SHA-256 of both APKs |
+
+          Fetch with \`git fetch origin refs/tags/just-music-apks:refs/tags/just-music-apks\`, or open
+          \`apk/\` in the tag on GitHub. This tag is replaced on every publish; history is not kept.
+          EOF
+          git add apk
+          git commit -m "apk: Just Music APKs from run ${{ steps.find.outputs.run_id }} [apk-artifacts]"
+          git tag -f just-music-apks
+          git push --force origin refs/tags/just-music-apks

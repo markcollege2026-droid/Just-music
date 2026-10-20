@@ -7,6 +7,14 @@ on:
   # so this branch is its own build trigger.
   push:
     branches: [ arena/f605d077-just-music ]
+    # Docs and CI-only commits do not need a 20-minute APK rebuild.
+    paths:
+      - 'app/**'
+      - 'gradle/**'
+      - 'build.gradle.kts'
+      - 'settings.gradle.kts'
+      - 'gradle.properties'
+      - '.github/workflows/just-music-apk.yml'
   workflow_dispatch:
     inputs:
       variant:
