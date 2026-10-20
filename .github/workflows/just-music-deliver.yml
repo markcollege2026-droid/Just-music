@@ -57,32 +57,27 @@ jobs:
       - name: Publish as the just-music-apks tag
         run: |
           set -euo pipefail
-          mkdir -p /tmp/apks
-          cp dist/*.apk dist/checksums.txt /tmp/apks/
-          git config user.name "just-music-bot"
-          git config user.email "actions@users.noreply.github.com"
-
-          # An orphan commit keeps the branch history (and its diffs) free of binaries.
-          git checkout --orphan apk-delivery
-          shopt -s dotglob
-          rm -rf -- *
-          mkdir -p apk
+          # A scratch repository, so the checkout (and this branch's history) never sees a binary.
+          rm -rf /tmp/pub && mkdir -p /tmp/pub/apk && cd /tmp/pub
           cp /tmp/apks/* apk/
-          cat > apk/README.md <<EOF
+          cat > apk/README.md <<'EOF'
           # Just Music APKs
-
-          Built from \`${{ github.sha }}\` by [run ${{ steps.find.outputs.run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ steps.find.outputs.run_id }}).
 
           | File | What it is |
           |---|---|
-          | \`app-foss-universal-debug.apk\` | debug build, debug-signed, \`io.github.aedev.justmusic.debug\` |
-          | \`app-foss-universal-release.apk\` | R8 release build, signed with the CI build key, \`io.github.aedev.justmusic\` |
-          | \`checksums.txt\` | SHA-256 of both APKs |
+          | `app-foss-universal-debug.apk` | debug build, debug-signed, `io.github.aedev.justmusic.debug` |
+          | `app-foss-universal-release.apk` | R8 release build, signed with the CI build key, `io.github.aedev.justmusic` |
+          | `checksums.txt` | SHA-256 of both APKs |
 
-          Fetch with \`git fetch origin refs/tags/just-music-apks:refs/tags/just-music-apks\`, or open
-          \`apk/\` in the tag on GitHub. This tag is replaced on every publish; history is not kept.
+          Fetch with `git fetch origin refs/tags/just-music-apks:refs/tags/just-music-apks`, or open
+          `apk/` on the tag in GitHub. The tag is replaced on every publish; old APKs are not kept.
           EOF
-          git add apk
-          git commit -m "apk: Just Music APKs from run ${{ steps.find.outputs.run_id }} [apk-artifacts]"
-          git tag -f just-music-apks
-          git push --force origin refs/tags/just-music-apks
+          git init -q
+          git add .
+          git -c user.name="just-music-bot" -c user.email="actions@users.noreply.github.com" \
+            commit -q -m "apk: Just Music APKs from run ${{ steps.find.outputs.run_id }} [apk-artifacts]"
+          git tag just-music-apks
+          git push --force \
+            "https://x-access-token:${GH_TOKEN}@github.com/${GH_REPO}.git" \
+            refs/tags/just-music-apks
+          echo "Published tag just-music-apks -> $(git rev-parse HEAD)"
