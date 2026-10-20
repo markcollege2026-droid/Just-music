@@ -1,0 +1,2 @@
+ec30c709ea1e3dac8bee5e37bc205448a7b6ee7771df4dfa79f9bec250587ec7  app-foss-universal-debug.apk
+122fe437140c19c8f51f258ae339f441fe490c762a43e48dbd9aeb6461cbf281  app-foss-universal-release.apk
