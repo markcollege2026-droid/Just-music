@@ -18,6 +18,7 @@ on:
 permissions:
   contents: write
   actions: read
+  issues: write
 
 env:
   GH_TOKEN: ${{ github.token }}
@@ -57,11 +58,14 @@ jobs:
       - name: Publish as the just-music-apks tag
         run: |
           set -euo pipefail
+          log=/tmp/publish.log
+          exec > >(tee "$log") 2>&1
+
           # A scratch repository, so the checkout (and this branch's history) never sees a binary.
-          rm -rf /tmp/pub && mkdir -p /tmp/pub/apk && cd /tmp/pub
-          cp dist/*.apk dist/checksums.txt apk/   # dist/ was downloaded into the workspace root
-          ls -l apk/
-          cat > apk/README.md <<'EOF'
+          rm -rf /tmp/pub
+          mkdir -p /tmp/pub/apk
+          cp "$GITHUB_WORKSPACE"/dist/*.apk "$GITHUB_WORKSPACE"/dist/checksums.txt /tmp/pub/apk/
+          cat > /tmp/pub/apk/README.md <<'EOF'
           # Just Music APKs
 
           | File | What it is |
@@ -73,6 +77,8 @@ jobs:
           Fetch with `git fetch origin refs/tags/just-music-apks:refs/tags/just-music-apks`, or open
           `apk/` on the tag in GitHub. The tag is replaced on every publish; old APKs are not kept.
           EOF
+          cd /tmp/pub
+          ls -l apk/
           git init -q
           git add .
           git -c user.name="just-music-bot" -c user.email="actions@users.noreply.github.com" \
@@ -82,3 +88,11 @@ jobs:
             "https://x-access-token:${GH_TOKEN}@github.com/${GH_REPO}.git" \
             refs/tags/just-music-apks
           echo "Published tag just-music-apks -> $(git rev-parse HEAD)"
+
+      # Delivery is infra, not product code: surface a failure where it can be read without the
+      # Actions log blob, which some networks cannot reach.
+      - name: Report failure
+        if: failure()
+        run: |
+          body=$(tail -c 3000 /tmp/publish.log 2>/dev/null || echo "publish log missing")
+          gh issue create --title "just-music delivery failure" --body "$body" || true
