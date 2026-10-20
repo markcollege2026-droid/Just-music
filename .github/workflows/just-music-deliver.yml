@@ -59,7 +59,8 @@ jobs:
           set -euo pipefail
           # A scratch repository, so the checkout (and this branch's history) never sees a binary.
           rm -rf /tmp/pub && mkdir -p /tmp/pub/apk && cd /tmp/pub
-          cp /tmp/apks/* apk/
+          cp dist/*.apk dist/checksums.txt apk/   # dist/ was downloaded into the workspace root
+          ls -l apk/
           cat > apk/README.md <<'EOF'
           # Just Music APKs
 
