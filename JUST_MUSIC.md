@@ -117,8 +117,32 @@ motion, widgets, TV layout, and every music screen's internal design.
 
 ## 4. The APKs
 
-Built by `.github/workflows/just-music-apk.yml` (manual/`push`-triggered workflow that never runs
-the upstream release pipeline). It uses the same Gradle/JDK/AGP toolchain as upstream CI:
+Both files sit next to this repo in the workspace:
+
+| File | Size | Package | Version | Signing |
+|---|---|---|---|---|
+| `apk/just-music-debug.apk` | 68.4 MB | `io.github.aedev.justmusic.debug` | `3.0.0-music-debug` | debug key, debuggable, no shrinking |
+| `apk/just-music-release.apk` | 28.9 MB | `io.github.aedev.justmusic` | `3.0.0-music` | CI build key, R8 + resource shrinking |
+
+SHA-256 (`apk/checksums.txt`):
+
+```
+ec30c709ea1e3dac8bee5e37bc205448a7b6ee7771df4dfa79f9bec250587ec7  just-music-debug.apk
+122fe437140c19c8f51f258ae339f441fe490c762a43e48dbd9aeb6461cbf281  just-music-release.apk
+```
+
+Both are **universal** APKs (arm64-v8a, armeabi-v7a, x86, x86_64), built from commit
+`3bc6863` by [run 39488290665](https://github.com/markcollege2026-droid/Just-music/actions/runs/39488290665),
+and `apksigner verify --print-certs` passed in that run. The binaries are also published to the
+git tag `just-music-apks` (`apk/` inside the tag):
+
+```bash
+git fetch origin refs/tags/just-music-apks:refs/tags/just-music-apks
+git show just-music-apks:apk/app-foss-universal-release.apk > just-music-release.apk
+```
+
+Built by `.github/workflows/just-music-apk.yml` (branch-push/manual workflow that never runs the
+upstream release pipeline). It uses the same Gradle/JDK/AGP toolchain as upstream CI:
 
 ```bash
 ./gradlew :app:assembleFossDebug      # app-foss-universal-debug.apk   (debuggable, no shrinking)
@@ -134,14 +158,15 @@ the upstream release pipeline). It uses the same Gradle/JDK/AGP toolchain as ups
   keystore secret does not exist on a fork; the app id is distinct from `io.github.aedev.flow`, so
   this key only ever has to match itself. Re-sign it with your own keystore if you plan to publish.
 
-Both APKs are downloadable from the latest run of the **Just Music APK** workflow on this branch
-(artifact `just-music-apks`, which also contains `checksums.txt`).
+The same two files are also attached to every run of the **Just Music APK** workflow as the
+`just-music-apks` artifact, and `.github/workflows/just-music-deliver.yml` republishes them to the
+`just-music-apks` tag when the artifact store itself is out of reach.
 
 ### Installing
 
 ```bash
-adb install -r app-foss-universal-debug.apk     # io.github.aedev.justmusic.debug
-adb install -r app-foss-universal-release.apk   # io.github.aedev.justmusic
+adb install -r apk/just-music-debug.apk      # io.github.aedev.justmusic.debug
+adb install -r apk/just-music-release.apk    # io.github.aedev.justmusic
 ```
 
 Both install side by side with the real Flow client (`io.github.aedev.flow`).
@@ -155,5 +180,6 @@ Both install side by side with the real Flow client (`io.github.aedev.flow`).
 * Notifications, widgets and Android Auto are shared components; they still list music only when the
   music library is all the app has.
 * `FLOW_SYNC` and backup work unchanged; a backup taken in the full app imports into this edition.
-* The upstream unit tests `FlowTabTest` and `LibrarySectionVisibilityTest` describe the full shell and
-  need the `MUSIC_ONLY` flag taken into account if you run `testFossDebugUnitTest`.
+* The full-shell unit tests (`FlowTabTest`, `LibrarySectionVisibilityTest`) are now edition-aware:
+  they skip under this flag and two music-edition tests assert the trimmed shell instead.
+* The launcher icon is still Flow's; only the name changed.
