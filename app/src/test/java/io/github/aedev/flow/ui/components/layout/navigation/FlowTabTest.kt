@@ -1,14 +1,18 @@
 package io.github.aedev.flow.ui.components.layout.navigation
 
 import io.github.aedev.flow.data.local.DEFAULT_NAV_TAB_ORDER
+import io.github.aedev.flow.ui.isMusicEdition
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
+import org.junit.Assume.assumeFalse
+import org.junit.Assume.assumeTrue
 import org.junit.Test
 
 class FlowTabTest {
     @Test
     fun hiddenHomeFallsBackToFirstVisibleDestination() {
+        assumeFalse("the full Flow shell", isMusicEdition)
         val visibility = NavigationVisibility(home = false, shorts = false, music = false)
 
         val resolved =
@@ -24,6 +28,7 @@ class FlowTabTest {
 
     @Test
     fun reEnabledHomeRestoresAHomeDefault() {
+        assumeFalse("the full Flow shell", isMusicEdition)
         val resolved =
             resolveDefaultFlowTab(
                 preferredId = FlowTab.Home.id,
@@ -36,6 +41,7 @@ class FlowTabTest {
 
     @Test
     fun tabsFollowTheSavedOrder() {
+        assumeFalse("the full Flow shell", isMusicEdition)
         val tabs =
             visibleFlowTabs(
                 order = listOf(4, 3, 2, 1, 0),
@@ -50,6 +56,7 @@ class FlowTabTest {
 
     @Test
     fun aSavedOrderMissingNewerTabsAppendsThemInDefaultOrder() {
+        assumeFalse("the full Flow shell", isMusicEdition)
         val tabs =
             visibleFlowTabs(
                 order = listOf(3, 0),
@@ -72,10 +79,25 @@ class FlowTabTest {
 
     @Test
     fun unknownPersistedIdsAreIgnored() {
+        assumeFalse("the full Flow shell", isMusicEdition)
         val tabs = visibleFlowTabs(order = listOf(42, 4, -1, 3), visibility = NavigationVisibility())
 
         assertEquals(FlowTab.Library, tabs.first())
         assertEquals(tabs.distinct(), tabs)
+    }
+
+    /**
+     * The music edition drops the video tabs and opens on music whatever the stored preference is.
+     */
+    @Test
+    fun musicEditionOffersMusicAndLibraryOnly() {
+        assumeTrue(isMusicEdition)
+
+        assertEquals(
+            listOf(FlowTab.Music, FlowTab.Library),
+            visibleFlowTabs(listOf(4, 3, 2, 1, 0), NavigationVisibility(search = true, categories = true)),
+        )
+        assertEquals(FlowTab.Music, resolveDefaultFlowTab(FlowTab.Home.id, DEFAULT_NAV_TAB_ORDER, NavigationVisibility()))
     }
 
     @Test

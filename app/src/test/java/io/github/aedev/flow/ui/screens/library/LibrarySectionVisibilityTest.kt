@@ -2,11 +2,15 @@ package io.github.aedev.flow.ui.screens.library
 
 import com.google.common.truth.Truth.assertThat
 import io.github.aedev.flow.ui.components.library.LibrarySection
+import io.github.aedev.flow.ui.isMusicEdition
+import org.junit.Assume.assumeFalse
+import org.junit.Assume.assumeTrue
 import org.junit.Test
 
 class LibrarySectionVisibilityTest {
     @Test
     fun `nothing hidden shows every content section in order`() {
+        assumeFalse("the full Flow shell", isMusicEdition)
         assertThat(visibleContentSections(emptySet(), separatePlaylistKinds = false, shortsEnabled = true))
             .containsExactly(
                 LibrarySection.HISTORY,
@@ -27,6 +31,7 @@ class LibrarySectionVisibilityTest {
 
     @Test
     fun `separate playlist kinds replace the combined section and hide independently`() {
+        assumeFalse("the full Flow shell", isMusicEdition)
         val visible =
             visibleContentSections(setOf(LibrarySection.MUSIC_PLAYLISTS), separatePlaylistKinds = true, shortsEnabled = true)
 
@@ -36,16 +41,34 @@ class LibrarySectionVisibilityTest {
 
     @Test
     fun `saved shorts follows the shorts content switch`() {
+        assumeFalse("the full Flow shell", isMusicEdition)
         assertThat(visibleContentSections(emptySet(), separatePlaylistKinds = false, shortsEnabled = false))
             .doesNotContain(LibrarySection.SAVED_SHORTS)
     }
 
     @Test
     fun `notes follows the notes switch and every settings row can be hidden`() {
+        assumeFalse("the full Flow shell", isMusicEdition)
         assertThat(visibleSettingsSections(emptySet(), notesEnabled = false))
             .containsExactly(LibrarySection.LOCAL_MEDIA, LibrarySection.SETTINGS)
             .inOrder()
         assertThat(visibleSettingsSections(LibrarySection.settingsAndData.toSet(), notesEnabled = true)).isEmpty()
+    }
+
+    @Test
+    fun `the music edition lists music shelves only`() {
+        assumeTrue(isMusicEdition)
+
+        assertThat(visibleContentSections(emptySet(), separatePlaylistKinds = false, shortsEnabled = true))
+            .containsExactly(
+                LibrarySection.HISTORY,
+                LibrarySection.MUSIC_PLAYLISTS,
+                LibrarySection.LIKED_MUSIC,
+                LibrarySection.DOWNLOADS,
+            ).inOrder()
+        assertThat(visibleSettingsSections(emptySet(), notesEnabled = true))
+            .containsExactly(LibrarySection.LOCAL_MEDIA, LibrarySection.SETTINGS)
+            .inOrder()
     }
 
     @Test

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Flow</string>
+    <string name="app_name">Just Music</string>
     <string name="subscriptions_search_placeholder">Tìm kênh đã đăng ký…</string>
     <string name="subscriptions_sort_label">Sắp xếp kênh</string>
     <string name="subscriptions_sort_default">Mặc định</string>
@@ -289,7 +289,7 @@
     <string name="artist">Nghệ sĩ</string>
     <string name="playlist">Danh sách phát</string>
     <string name="playlist_visibility_metadata">%1$s • %2$s</string>
-    <string name="app_name_uppercase">FLOW</string>
+    <string name="app_name_uppercase">JUST MUSIC</string>
     <string name="notification_badge_9_plus">9+</string>
     <string name="personalized_feed">Nguồn cấp cá nhân hóa</string>
     <string name="import_newpipe_backup">Nhập sao lưu NewPipe</string>

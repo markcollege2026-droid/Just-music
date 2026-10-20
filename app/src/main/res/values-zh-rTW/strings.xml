@@ -42,7 +42,7 @@
     <string name="history_no_results_body">試試其他搜尋或篩選條件</string>
     <string name="history_tab_videos">影片</string>
     <string name="history_tab_shorts">Shorts</string>
-    <string name="app_name">Flow</string>
+    <string name="app_name">Just Music</string>
     <string name="liked">已讚好</string>
     <string name="liked_music">讚好音樂</string>
     <string name="liked_videos">讚好</string>
@@ -328,7 +328,7 @@
     <string name="chapters">章節</string>
     <string name="artist">藝人</string>
     <string name="playlist">播放清單</string>
-    <string name="app_name_uppercase">FLOW</string>
+    <string name="app_name_uppercase">JUST MUSIC</string>
     <string name="notification_badge_9_plus">9+</string>
     <string name="unsubscribed_from_template">已取消訂閱 %1$s</string>
     <string name="hide_channel_shorts">隱藏此頻道的 Shorts</string>

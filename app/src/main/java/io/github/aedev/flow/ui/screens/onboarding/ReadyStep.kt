@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import io.github.aedev.flow.R
 import io.github.aedev.flow.ui.components.shared.FlowMorphingPortrait
+import io.github.aedev.flow.ui.isMusicEdition
 
 private val PortraitSize = 56.dp
 private val ChipSpacing = 8.dp
@@ -80,10 +81,13 @@ internal fun ReadyStep(
                 text = pluralStringResource(R.plurals.onboarding_ready_interests, state.topics.size, state.topics.size),
                 icon = Icons.Outlined.Interests,
             ) { onEdit(OnboardingStep.INTERESTS) }
-            SummaryChip(
-                text = pluralStringResource(R.plurals.onboarding_ready_channels, state.subscribed.size, state.subscribed.size),
-                icon = Icons.Outlined.Subscriptions,
-            ) { onEdit(OnboardingStep.CHANNELS) }
+            // The music edition never asks for video channels, so it has nothing to summarise.
+            if (!isMusicEdition) {
+                SummaryChip(
+                    text = pluralStringResource(R.plurals.onboarding_ready_channels, state.subscribed.size, state.subscribed.size),
+                    icon = Icons.Outlined.Subscriptions,
+                ) { onEdit(OnboardingStep.CHANNELS) }
+            }
             if (artistCount > 0) {
                 SummaryChip(
                     text = pluralStringResource(R.plurals.onboarding_ready_artists, artistCount, artistCount),

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Flow</string>
+    <string name="app_name">Just Music</string>
     <string name="subscriptions_search_placeholder">搜索订阅...</string>
     <string name="subscriptions_sort_label">频道排序</string>
     <string name="subscriptions_sort_default">默认</string>
@@ -290,7 +290,7 @@
     <string name="artist">艺术家</string>
     <string name="playlist">播放列表</string>
     <string name="playlist_visibility_metadata">%1$s • %2$s</string>
-    <string name="app_name_uppercase">FLOW</string>
+    <string name="app_name_uppercase">JUST MUSIC</string>
     <string name="notification_badge_9_plus">9+</string>
     <string name="personalized_feed">您的个性化信息流</string>
     <string name="import_newpipe_backup">导入NewPipe备份</string>

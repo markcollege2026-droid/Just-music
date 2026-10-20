@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Flow</string>
+    <string name="app_name">Just Music</string>
     <string name="subscriptions_search_placeholder">Aboneliklerde ara...</string>
     <string name="top_bar_subscriptions_title">Abonelikler</string>
     <string name="view_all_button_label">Tümü</string>
@@ -210,7 +210,7 @@
     <string name="views_template">%1$s görüntüleme</string>
     <string name="artist">Sanatçı</string>
     <string name="playlist">Oynatma listesi</string>
-    <string name="app_name_uppercase">FLOW</string>
+    <string name="app_name_uppercase">JUST MUSIC</string>
     <string name="notification_badge_9_plus">9+</string>
     <string name="import_newpipe_backup">NewPipe Yedeğini içe aktar</string>
     <string name="importing_from_backup">NewPipe yedeğinden abonelikler içe aktarılıyor...</string>

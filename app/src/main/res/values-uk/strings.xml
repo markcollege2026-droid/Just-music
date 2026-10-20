@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Flow</string>
+    <string name="app_name">Just Music</string>
     <string name="subscriptions_search_placeholder">Пошук підписок...</string>
     <string name="top_bar_subscriptions_title">Підписки</string>
     <string name="view_all_button_label">Всі</string>
@@ -324,7 +324,7 @@
     <string name="notifications">Сповіщення</string>
     <string name="since">З</string>
     <string name="chapters">Частини</string>
-    <string name="app_name_uppercase">FLOW</string>
+    <string name="app_name_uppercase">JUST MUSIC</string>
     <string name="unsubscribed_from_template">Відписано від %1$s</string>
     <string name="recent_searches">Нещодавні пошуки</string>
     <string name="end_of_results">Кінець результатів</string>

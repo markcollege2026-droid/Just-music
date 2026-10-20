@@ -88,13 +88,13 @@ class OnboardingViewModel
         }
 
         fun next() {
-            val next = OnboardingStep.entries.getOrNull(_state.value.step.index + 1)
+            val next = OnboardingStep.stepAfter(_state.value.step)
             if (next == null) complete() else goTo(next)
         }
 
         /** Steps back; false on the first step, so the system can handle back itself. */
         fun back(): Boolean {
-            val previous = OnboardingStep.entries.getOrNull(_state.value.step.index - 1) ?: return false
+            val previous = OnboardingStep.stepBefore(_state.value.step) ?: return false
             goTo(previous)
             return true
         }
@@ -202,8 +202,8 @@ class OnboardingViewModel
                 step =
                     savedState
                         .get<String>(KEY_STEP)
-                        ?.let { name -> OnboardingStep.entries.firstOrNull { it.name == name } }
-                        ?: OnboardingStep.entries.first(),
+                        ?.let { name -> OnboardingStep.flow.firstOrNull { it.name == name } }
+                        ?: OnboardingStep.firstStep(),
                 topics = savedState.get<ArrayList<String>>(KEY_TOPICS).orEmpty().toSet(),
                 query = savedState.get<String>(KEY_QUERY).orEmpty(),
                 subscribed =

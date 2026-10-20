@@ -9,6 +9,7 @@ import io.github.aedev.flow.data.music.model.ArtistDetails
 import io.github.aedev.flow.data.music.model.MusicPlaylist
 import io.github.aedev.flow.data.music.model.MusicTrack
 import io.github.aedev.flow.ui.components.music.header.MusicSectionAction
+import io.github.aedev.flow.ui.isMusicEdition
 
 /** The viewer's own playlists and music subscriptions, and the sections they chose to hide. */
 @Immutable
@@ -50,7 +51,14 @@ internal fun LazyListScope.yourLibrary(
                 name = { it.name },
                 thumbnailUrl = { it.thumbnailUrl },
                 onArtistClick = { onArtistClick(it.channelId) },
-                action = MusicSectionAction.Navigate(library.onAllSubscriptionsClick),
+                // The see-all target is the video subscription feed; the music edition has none, so
+                // the lane stops at the artists themselves instead of offering a way into it.
+                action =
+                    if (isMusicEdition) {
+                        null
+                    } else {
+                        MusicSectionAction.Navigate(library.onAllSubscriptionsClick)
+                    },
             )
         }
     }

@@ -54,11 +54,18 @@ android {
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "io.github.aedev.flow"
+        // The Just Music edition is its own app: installing it never replaces, or fights over the
+        // signature of, the full Flow client.
+        applicationId = "io.github.aedev.justmusic"
         minSdk = 26
         targetSdk = 36
         versionCode = 19
-        versionName = "3.0.0"
+        versionName = "3.0.0-music"
+
+        // Trims the shell down to the music surface: music + library tabs, music library shelves,
+        // and no video tabs, video feeds or video onboarding step. Flipping this off restores the
+        // full Flow UI, which is why it lives in Gradle rather than in a hand-edited branch.
+        buildConfigField("Boolean", "MUSIC_ONLY", "true")
 
         buildConfigField("int", "NIGHTLY_RUN", "0")
         buildConfigField("String", "APP_LANGUAGE_TAGS", "\"${(listOf("en") + translatedLocaleTags()).joinToString(",")}\"")

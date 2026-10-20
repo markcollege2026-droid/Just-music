@@ -5,6 +5,7 @@ import androidx.compose.runtime.Immutable
 import io.github.aedev.flow.R
 import io.github.aedev.flow.data.backup.ImportSource
 import io.github.aedev.flow.data.model.Channel
+import io.github.aedev.flow.ui.isMusicEdition
 
 internal const val MIN_TOPICS = 3
 internal const val STAGGER_DELAY_MS = 50L
@@ -27,7 +28,26 @@ enum class OnboardingStep(
     val showsProgress: Boolean get() = labelRes != null
 
     companion object {
-        val progressSteps: List<OnboardingStep> = entries.filter { it.showsProgress }
+        /**
+         * The steps this edition walks, in order. The music edition has no video subscriptions, so
+         * it skips the channel-picking step and goes from interests straight to artists.
+         */
+        val flow: List<OnboardingStep> = entries.filter { it != CHANNELS || !isMusicEdition }
+
+        val progressSteps: List<OnboardingStep> = flow.filter { it.showsProgress }
+
+        /** The step after/earlier than [step] in this edition, or null at either end. */
+        fun stepAfter(step: OnboardingStep): OnboardingStep? {
+            val index = flow.indexOf(step)
+            return if (index < 0) flow.lastOrNull() else flow.getOrNull(index + 1)
+        }
+
+        fun stepBefore(step: OnboardingStep): OnboardingStep? {
+            val index = flow.indexOf(step)
+            return if (index < 0) null else flow.getOrNull(index - 1)
+        }
+
+        fun firstStep(): OnboardingStep = flow.first()
     }
 }
 

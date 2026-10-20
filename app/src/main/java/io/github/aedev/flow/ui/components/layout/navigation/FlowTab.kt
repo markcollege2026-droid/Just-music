@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import io.github.aedev.flow.R
 import io.github.aedev.flow.data.local.DEFAULT_NAV_TAB_ORDER
+import io.github.aedev.flow.ui.isMusicEdition
 
 /**
  * A root destination of the app's primary navigation.
@@ -65,6 +66,14 @@ data class NavigationVisibility(
 )
 
 /**
+ * The Just Music edition's shell: the music home, and a library that lists music only.
+ *
+ * The video tabs (Home, Shorts, Subscriptions, Explore) and the all-media Search tab are not
+ * offered, so the bar has nothing to switch to but the two surfaces the edition is about.
+ */
+private val MusicEditionTabs = listOf(FlowTab.Music, FlowTab.Library)
+
+/**
  * The tabs to show, in the user's order. Subscriptions and Library cannot be hidden: every root
  * destination carries Notifications and Settings in its top bar, so one must always exist.
  */
@@ -72,6 +81,8 @@ fun visibleFlowTabs(
     order: List<Int>,
     visibility: NavigationVisibility,
 ): List<FlowTab> {
+    if (isMusicEdition) return MusicEditionTabs
+
     val enabled =
         buildSet {
             if (visibility.home) add(FlowTab.Home)
@@ -93,6 +104,9 @@ fun resolveDefaultFlowTab(
     order: List<Int>,
     visibility: NavigationVisibility,
 ): FlowTab {
+    // The music edition always opens on music, whatever tab order an older install stored.
+    if (isMusicEdition) return FlowTab.Music
+
     val visible = visibleFlowTabs(order, visibility)
     return visible.firstOrNull { it.id == preferredId } ?: visible.first()
 }

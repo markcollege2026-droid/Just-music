@@ -69,6 +69,7 @@ import io.github.aedev.flow.ui.components.shared.FlowSortChip
 import io.github.aedev.flow.ui.components.shared.MediaKind
 import io.github.aedev.flow.ui.components.shared.dismissKeyboardOnPress
 import io.github.aedev.flow.ui.components.shared.flowGridColumns
+import io.github.aedev.flow.ui.isMusicEdition
 
 @Composable
 fun DownloadsScreen(
@@ -108,7 +109,8 @@ fun DownloadsScreen(
     LaunchedEffect(viewModel) { viewModel.recovered.collect { snackbarHostState.showSnackbar(recoveredMessage(it)) } }
     val deletePrompt = rememberLauncherForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { }
     LaunchedEffect(viewModel) { viewModel.deleteConsent.collect { deletePrompt.launch(IntentSenderRequest.Builder(it).build()) } }
-    var selectedKind by rememberSaveable { mutableStateOf(MediaKind.Videos) }
+    // A music-only shell downloads songs, so its downloads page opens on them.
+    var selectedKind by rememberSaveable { mutableStateOf(if (isMusicEdition) MediaKind.Music else MediaKind.Videos) }
     var pendingDeletion by remember { mutableStateOf<PendingDeletion?>(null) }
     var removeIncompleteOf by remember { mutableStateOf<MediaKind?>(null) }
     var removingCollection by remember { mutableStateOf<DownloadCollectionSummary?>(null) }

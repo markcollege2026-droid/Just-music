@@ -67,7 +67,7 @@
     <string name="play_next_desc">Diputar setelah lagu saat ini</string>
     <string name="add_to_queue">Tambahkan ke antrean</string>
     <string name="add_to_queue_desc">Tambahkan ke akhir antrean</string>
-    <string name="app_name_uppercase">FLOW</string>
+    <string name="app_name_uppercase">JUST MUSIC</string>
     <string name="notification_badge_9_plus">9+</string>
     <string name="new_update_available">Pembaruan Baru Tersedia</string>
     <string name="update_available_template">%1$s kini tersedia</string>
@@ -135,7 +135,7 @@
     <string name="lyrics_provider_lrclib">LrcLib</string>
     <string name="lyrics_provider_better_lyrics">Better Lyrics</string>
     <string name="lyrics_provider_simpmusic">SimpMusic</string>
-    <string name="app_name">Flow</string>
+    <string name="app_name">Just Music</string>
     <string name="subscriptions_search_placeholder">Mencari langganan...</string>
     <string name="top_bar_subscriptions_title">Langganan</string>
     <string name="view_all_button_label">Semua</string>

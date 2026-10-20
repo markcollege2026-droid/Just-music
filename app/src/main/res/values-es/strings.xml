@@ -206,7 +206,7 @@
     <string name="artist">Artista</string>
     <string name="comments">Comentarios</string>
     <string name="filter_workout">Ejercicio</string>
-    <string name="app_name">Flow</string>
+    <string name="app_name">Just Music</string>
     <string name="download_all">Descargar todo</string>
     <string name="saved">Guardadas</string>
     <string name="resume">Reanudar</string>
@@ -228,7 +228,7 @@
     <string name="album_art">Caratula del álbum</string>
     <string name="views_template">%1$s visualizaciones</string>
     <string name="chapters">Capítulos</string>
-    <string name="app_name_uppercase">FLOW</string>
+    <string name="app_name_uppercase">JUST MUSIC</string>
     <string name="notification_badge_9_plus">9+</string>
     <string name="personalized_feed">Tu feed personal</string>
     <string name="import_newpipe_backup">Importar copia de seguridad de NewPipe</string>

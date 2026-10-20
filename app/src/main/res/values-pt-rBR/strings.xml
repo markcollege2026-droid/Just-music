@@ -7,7 +7,7 @@
     <string name="no_subscriptions_yet">Sem inscrições ainda</string>
     <string name="status_downloaded">Baixado</string>
     <string name="title_create_playlist">Criar Playlist</string>
-    <string name="app_name">Flow</string>
+    <string name="app_name">Just Music</string>
     <string name="empty_subscriptions_body">Inscreva-se em canais para ver seus vídeos mais recentes aqui</string>
     <string name="home_refresh_feed">Atualizar o feed</string>
     <string name="retry">Tentar Novamente</string>
@@ -341,7 +341,7 @@
     <string name="added_to_playlist_toast">Adicionado à playlist</string>
     <string name="close_player">Fechar reprodutor</string>
     <string name="playlist">Playlist</string>
-    <string name="app_name_uppercase">FLOW</string>
+    <string name="app_name_uppercase">JUST MUSIC</string>
     <string name="edit_group">Editar Grupo</string>
     <string name="delete_group">Deletar Grupo</string>
     <string name="group_name_label">Nome do grupo</string>
